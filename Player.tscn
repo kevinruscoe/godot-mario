@@ -14,9 +14,9 @@ region = Rect2( 24, 0, 24, 24 )
 
 [sub_resource type="SpriteFrames" id=3]
 animations = [ {
-"frames": [ SubResource( 1 ) ],
+"frames": [ SubResource( 1 ), SubResource( 2 ) ],
 "loop": true,
-"name": "idle",
+"name": "walking",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 2 ) ],
@@ -24,9 +24,9 @@ animations = [ {
 "name": "jumping",
 "speed": 5.0
 }, {
-"frames": [ SubResource( 1 ), SubResource( 2 ) ],
+"frames": [ SubResource( 1 ) ],
 "loop": true,
-"name": "walking",
+"name": "idle",
 "speed": 5.0
 } ]
 
@@ -52,16 +52,9 @@ shape = SubResource( 5 )
 current = true
 limit_bottom = 160
 
-[node name="Control" type="Control" parent="Camera2D"]
-visible = false
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = -160.0
-margin_top = -110.0
-margin_right = 160.0
-margin_bottom = 110.0
+[node name="CanvasLayer" type="CanvasLayer" parent="Camera2D"]
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Camera2D/Control"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Camera2D/CanvasLayer"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 10.0
@@ -69,51 +62,14 @@ margin_top = 10.0
 margin_right = -10.0
 margin_bottom = -10.0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="Camera2D/Control/VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="Camera2D/CanvasLayer/VBoxContainer"]
 margin_right = 300.0
 margin_bottom = 14.0
-size_flags_vertical = 2
 
-[node name="Label" type="Label" parent="Camera2D/Control/VBoxContainer/HBoxContainer"]
-margin_right = 97.0
+[node name="Label" type="Label" parent="Camera2D/CanvasLayer/VBoxContainer/HBoxContainer"]
+margin_right = 34.0
 margin_bottom = 14.0
-size_flags_horizontal = 3
-text = "hello"
-
-[node name="Label2" type="Label" parent="Camera2D/Control/VBoxContainer/HBoxContainer"]
-margin_left = 101.0
-margin_right = 198.0
-margin_bottom = 14.0
-size_flags_horizontal = 3
-text = "hello"
-align = 1
-
-[node name="Label3" type="Label" parent="Camera2D/Control/VBoxContainer/HBoxContainer"]
-margin_left = 202.0
-margin_right = 300.0
-margin_bottom = 14.0
-size_flags_horizontal = 3
-text = "hello"
-align = 2
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="Camera2D/Control/VBoxContainer"]
-margin_top = 186.0
-margin_right = 300.0
-margin_bottom = 200.0
-
-[node name="Label" type="Label" parent="Camera2D/Control/VBoxContainer/HBoxContainer2"]
-margin_right = 148.0
-margin_bottom = 14.0
-size_flags_horizontal = 3
-text = "hello"
-
-[node name="Label2" type="Label" parent="Camera2D/Control/VBoxContainer/HBoxContainer2"]
-margin_left = 152.0
-margin_right = 300.0
-margin_bottom = 14.0
-size_flags_horizontal = 3
-text = "hello"
-align = 2
+text = "Hello"
 
 [connection signal="has_become_stationary" from="." to="AnimatedSprite" method="_on_KinematicBody2D_has_become_stationary"]
 [connection signal="has_jumped" from="." to="AnimatedSprite" method="_on_KinematicBody2D_has_jumped"]
