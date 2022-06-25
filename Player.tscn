@@ -1,0 +1,121 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://AnimatedSprite.gd" type="Script" id=1]
+[ext_resource path="res://characters_packed.png" type="Texture" id=2]
+[ext_resource path="res://KinematicBody2D.gd" type="Script" id=3]
+
+[sub_resource type="AtlasTexture" id=1]
+atlas = ExtResource( 2 )
+region = Rect2( 0, 0, 24, 24 )
+
+[sub_resource type="AtlasTexture" id=2]
+atlas = ExtResource( 2 )
+region = Rect2( 24, 0, 24, 24 )
+
+[sub_resource type="SpriteFrames" id=3]
+animations = [ {
+"frames": [ SubResource( 1 ) ],
+"loop": true,
+"name": "idle",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 2 ) ],
+"loop": true,
+"name": "jumping",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 1 ), SubResource( 2 ) ],
+"loop": true,
+"name": "walking",
+"speed": 5.0
+} ]
+
+[sub_resource type="CircleShape2D" id=5]
+radius = 8.0
+
+[node name="KinematicBody2D" type="KinematicBody2D"]
+z_index = 10
+script = ExtResource( 3 )
+jump_speed = -150
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+frames = SubResource( 3 )
+animation = "jumping"
+playing = true
+script = ExtResource( 1 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 0, 2 )
+shape = SubResource( 5 )
+
+[node name="Camera2D" type="Camera2D" parent="."]
+current = true
+limit_bottom = 160
+
+[node name="Control" type="Control" parent="Camera2D"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -160.0
+margin_top = -110.0
+margin_right = 160.0
+margin_bottom = 110.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Camera2D/Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 10.0
+margin_top = 10.0
+margin_right = -10.0
+margin_bottom = -10.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Camera2D/Control/VBoxContainer"]
+margin_right = 300.0
+margin_bottom = 14.0
+size_flags_vertical = 2
+
+[node name="Label" type="Label" parent="Camera2D/Control/VBoxContainer/HBoxContainer"]
+margin_right = 97.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+text = "hello"
+
+[node name="Label2" type="Label" parent="Camera2D/Control/VBoxContainer/HBoxContainer"]
+margin_left = 101.0
+margin_right = 198.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+text = "hello"
+align = 1
+
+[node name="Label3" type="Label" parent="Camera2D/Control/VBoxContainer/HBoxContainer"]
+margin_left = 202.0
+margin_right = 300.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+text = "hello"
+align = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Camera2D/Control/VBoxContainer"]
+margin_top = 186.0
+margin_right = 300.0
+margin_bottom = 200.0
+
+[node name="Label" type="Label" parent="Camera2D/Control/VBoxContainer/HBoxContainer2"]
+margin_right = 148.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+text = "hello"
+
+[node name="Label2" type="Label" parent="Camera2D/Control/VBoxContainer/HBoxContainer2"]
+margin_left = 152.0
+margin_right = 300.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+text = "hello"
+align = 2
+
+[connection signal="has_become_stationary" from="." to="AnimatedSprite" method="_on_KinematicBody2D_has_become_stationary"]
+[connection signal="has_jumped" from="." to="AnimatedSprite" method="_on_KinematicBody2D_has_jumped"]
+[connection signal="has_landed" from="." to="AnimatedSprite" method="_on_KinematicBody2D_has_landed"]
+[connection signal="has_started_moving" from="." to="AnimatedSprite" method="_on_KinematicBody2D_has_started_moving"]
