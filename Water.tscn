@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://tiles_packed.png" type="Texture" id=1]
+
+[sub_resource type="AtlasTexture" id=36]
+atlas = ExtResource( 1 )
+region = Rect2( 234, 18, 18, 18 )
+
+[sub_resource type="AtlasTexture" id=37]
+atlas = ExtResource( 1 )
+region = Rect2( 234, 36, 18, 18 )
+
+[sub_resource type="SpriteFrames" id=38]
+animations = [ {
+"frames": [ SubResource( 36 ), SubResource( 37 ) ],
+"loop": true,
+"name": "default",
+"speed": 3.0
+} ]
+
+[node name="Water" type="AnimatedSprite"]
+frames = SubResource( 38 )
+playing = true
+
+[node name="Sprite" type="Sprite" parent="."]
+texture = ExtResource( 1 )
+offset = Vector2( 0, 18 )
+region_enabled = true
+region_rect = Rect2( 234, 54, 18, 18 )

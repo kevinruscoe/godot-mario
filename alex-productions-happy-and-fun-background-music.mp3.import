@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/alex-productions-happy-and-fun-background-music.mp3-f54bc2202c8ba12156e5da7264c4e79e.mp3str"
+
+[deps]
+
+source_file="res://alex-productions-happy-and-fun-background-music.mp3"
+dest_files=[ "res://.import/alex-productions-happy-and-fun-background-music.mp3-f54bc2202c8ba12156e5da7264c4e79e.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0

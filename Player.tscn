@@ -1,27 +1,28 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://AnimatedSprite.gd" type="Script" id=1]
 [ext_resource path="res://characters_packed.png" type="Texture" id=2]
-[ext_resource path="res://KinematicBody2D.gd" type="Script" id=3]
-
-[sub_resource type="AtlasTexture" id=1]
-atlas = ExtResource( 2 )
-region = Rect2( 0, 0, 24, 24 )
+[ext_resource path="res://Player.gd" type="Script" id=3]
+[ext_resource path="res://CoinLabel.gd" type="Script" id=4]
 
 [sub_resource type="AtlasTexture" id=2]
 atlas = ExtResource( 2 )
 region = Rect2( 24, 0, 24, 24 )
 
+[sub_resource type="AtlasTexture" id=1]
+atlas = ExtResource( 2 )
+region = Rect2( 0, 0, 24, 24 )
+
 [sub_resource type="SpriteFrames" id=3]
 animations = [ {
-"frames": [ SubResource( 1 ), SubResource( 2 ) ],
-"loop": true,
-"name": "walking",
-"speed": 5.0
-}, {
 "frames": [ SubResource( 2 ) ],
 "loop": true,
 "name": "jumping",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 1 ), SubResource( 2 ) ],
+"loop": true,
+"name": "walking",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 1 ) ],
@@ -33,7 +34,7 @@ animations = [ {
 [sub_resource type="CircleShape2D" id=5]
 radius = 8.0
 
-[node name="KinematicBody2D" type="KinematicBody2D"]
+[node name="Player" type="KinematicBody2D"]
 z_index = 10
 script = ExtResource( 3 )
 jump_speed = -150
@@ -50,7 +51,9 @@ shape = SubResource( 5 )
 
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
+limit_left = 0
 limit_bottom = 160
+smoothing_enabled = true
 
 [node name="CanvasLayer" type="CanvasLayer" parent="Camera2D"]
 
@@ -66,12 +69,13 @@ margin_bottom = -10.0
 margin_right = 300.0
 margin_bottom = 14.0
 
-[node name="Label" type="Label" parent="Camera2D/CanvasLayer/VBoxContainer/HBoxContainer"]
+[node name="CoinLabel" type="Label" parent="Camera2D/CanvasLayer/VBoxContainer/HBoxContainer"]
 margin_right = 34.0
 margin_bottom = 14.0
 text = "Hello"
+script = ExtResource( 4 )
 
-[connection signal="has_become_stationary" from="." to="AnimatedSprite" method="_on_KinematicBody2D_has_become_stationary"]
-[connection signal="has_jumped" from="." to="AnimatedSprite" method="_on_KinematicBody2D_has_jumped"]
-[connection signal="has_landed" from="." to="AnimatedSprite" method="_on_KinematicBody2D_has_landed"]
-[connection signal="has_started_moving" from="." to="AnimatedSprite" method="_on_KinematicBody2D_has_started_moving"]
+[connection signal="has_become_stationary" from="." to="AnimatedSprite" method="_on_Player_has_become_stationary"]
+[connection signal="has_jumped" from="." to="AnimatedSprite" method="_on_Player_has_jumped"]
+[connection signal="has_landed" from="." to="AnimatedSprite" method="_on_Player_has_landed"]
+[connection signal="has_started_moving" from="." to="AnimatedSprite" method="_on_Player_has_started_moving"]
