@@ -1,4 +1,4 @@
 extends Node
 
-signal coin_collected
+signal coins_collected(amount)
 signal out_of_bounds
