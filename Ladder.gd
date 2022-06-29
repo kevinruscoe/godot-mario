@@ -8,12 +8,12 @@ onready var staticbody2d_collisionshape2d: CollisionShape2D = $StaticBody2D/Coll
 
 func _ready():
 	var current = 0
-	
+
 	var new_sprite = sprite.duplicate()
 	
-	# extend the collision by the ladder height, and offsets the by -1 tile for walking collision
+	# extend the collision by the ladder height, and offsets the by -1/2 tile for walking collision
 	collisionshape2d.shape.extents.y = (height + 1) * 9
-	collisionshape2d.position.y = ((height + 1) / 2 * 18) - 18
+	collisionshape2d.position.y = ((height + 1) / 2 * 18) - 12
 	
 	while current < height:
 		var child = new_sprite.duplicate()
@@ -24,10 +24,10 @@ func _ready():
 		current += 1
 
 func disable_static_body():
-	staticbody2d_collisionshape2d.disabled = true
+	staticbody2d_collisionshape2d.set_deferred("disabled", true)
 	
 func enable_static_body():
-	staticbody2d_collisionshape2d.disabled = false
+	staticbody2d_collisionshape2d.set_deferred("disabled", false)
 
 func _on_body_entered(body):
 	if body.name == "Player":
