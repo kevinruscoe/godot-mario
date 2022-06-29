@@ -17,10 +17,10 @@ var on_ladder = false
 var moved_on_ladder = false
 var walked_over_ladder = false
 
-var ladder_timer: Timer
-
 export (float, 0, 1.0) var friction = 0.18
 export (float, 0, 1.0) var acceleration = 0.25
+
+var current_ladder
 
 signal has_become_stationary
 signal has_started_moving
@@ -39,10 +39,6 @@ func _ready():
 	connect("has_landed", self, "_on_landed")
 	connect("has_become_stationary", self, "_on_has_become_stationary")
 	connect("has_started_moving", self, "_on_has_started_moving")
-	
-	ladder_timer = Timer.new()
-	add_child(ladder_timer)
-	ladder_timer.connect("timeout", self, "_on_ladder_timer_timeout")
 
 func _physics_process(delta):
 	var direction = Vector2.ZERO
@@ -62,9 +58,6 @@ func _physics_process(delta):
 		velocity.x = lerp(velocity.x, 0, friction)
 		
 	if on_ladder:
-		if walked_over_ladder:
-			velocity.y = 0
-			
 		if moved_on_ladder:
 			velocity.y = 0
 		else:
@@ -73,10 +66,12 @@ func _physics_process(delta):
 			
 		if Input.is_action_pressed("ui_up"):
 			moved_on_ladder = true
+			current_ladder.disable_static_body()
 			velocity.y = -speed
 			
 		if Input.is_action_pressed("ui_down"):
 			moved_on_ladder = true
+			current_ladder.disable_static_body()
 			velocity.y = speed
 	else:
 		velocity.y += gravity * delta
@@ -117,19 +112,13 @@ func _on_has_become_stationary():
 func _on_has_started_moving():
 	is_moving = true
 	
-func _on_enter_ladder(from_top = false):
+func _on_enter_ladder(ladder):
+	current_ladder = ladder
 	on_ladder = true
-	
-	if from_top:
-		walked_over_ladder = true
-		
-	
+
 func _on_exit_ladder():
+	current_ladder.enable_static_body()
+	current_ladder = null
+	
 	on_ladder = false
-
-	ladder_timer.set_wait_time(.1)
-	ladder_timer.start()
-
-func _on_ladder_timer_timeout():
-	if not on_ladder:
-		moved_on_ladder = false
+	moved_on_ladder = false
