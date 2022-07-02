@@ -35,10 +35,13 @@ onready var collision_shape_2d: CollisionShape2D = $CollisionShape2D
 func _ready():
 	initial_positon = global_position
 	
-	connect("has_jumped", self, "_on_jump")
-	connect("has_landed", self, "_on_landed")
-	connect("has_become_stationary", self, "_on_has_become_stationary")
-	connect("has_started_moving", self, "_on_has_started_moving")
+	EventBus.connect("player_entered_ladder", self, "_on_entered_ladder")
+	EventBus.connect("player_exited_ladder", self, "_on_exited_ladder")
+	
+	EventBus.connect("player_has_jumped", self, "_on_jumped")
+	EventBus.connect("player_has_landed", self, "_on_landed")
+	EventBus.connect("player_has_become_stationary", self, "_on_has_become_stationary")
+	EventBus.connect("player_has_started_moving", self, "_on_has_started_moving")
 
 func _physics_process(delta):
 	var direction = Vector2.ZERO
@@ -50,11 +53,11 @@ func _physics_process(delta):
 		
 	if direction.x != 0:
 		if not is_moving:
-			emit_signal("has_started_moving")
+			EventBus.emit_signal("player_has_started_moving")
 		velocity.x = lerp(velocity.x, direction.x * speed, acceleration)
 	else:
 		if is_moving:
-			emit_signal("has_become_stationary")
+			EventBus.emit_signal("player_has_become_stationary")
 		velocity.x = lerp(velocity.x, 0, friction)
 		
 	if on_ladder:
@@ -80,16 +83,16 @@ func _physics_process(delta):
 	
 	if Input.is_action_just_pressed("ui_jump"):
 		if is_on_floor():
-			emit_signal("has_jumped")
+			EventBus.emit_signal("player_has_jumped")
 		
 	if is_moving:
-		emit_signal("is_moving")
+		EventBus.emit_signal("player_is_moving")
 			
 	if is_jumping and velocity.y == 0:
-		emit_signal("has_landed")
+		EventBus.emit_signal("player_has_landed")
 		
 	if position.y > 180:
-		EventBus.emit_signal("out_of_bounds")
+		EventBus.emit_signal("player_out_of_bounds")
 		position = initial_positon
 		
 	if velocity.y > 0:
@@ -99,7 +102,7 @@ func _physics_process(delta):
 		is_falling = false
 		is_rising = false
 
-func _on_jump():
+func _on_jumped():
 	is_jumping = true
 	velocity.y = jump_speed
 	
@@ -112,13 +115,13 @@ func _on_has_become_stationary():
 func _on_has_started_moving():
 	is_moving = true
 	
-func _on_enter_ladder(ladder):
+func _on_entered_ladder(ladder):
 	current_ladder = ladder
 	on_ladder = true
 
-func _on_exit_ladder():
-	current_ladder.enable_static_body()
-	current_ladder = null
+func _on_exited_ladder(ladder):
+	ladder.enable_static_body()
 	
+	current_ladder = null
 	on_ladder = false
 	moved_on_ladder = false

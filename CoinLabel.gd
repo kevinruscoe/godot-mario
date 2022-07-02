@@ -4,11 +4,11 @@ var coins = 0
 
 func _ready():
 	refresh_ui()
-	EventBus.connect("coins_collected", self, "_on_coins_collected")
+	EventBus.connect("player_collected_coins", self, "_on_player_collected_coins")
 	
 func refresh_ui():
 	set_text(String(coins) + " coins")
 
-func _on_coins_collected(amount):
+func _on_player_collected_coins(amount):
 	coins += amount
 	refresh_ui()
