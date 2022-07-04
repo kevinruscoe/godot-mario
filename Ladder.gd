@@ -11,11 +11,8 @@ func _ready():
 
 	var new_sprite = sprite.duplicate()
 	
-	# extend the collision by the ladder height, and offsets the by -1/2 tile for walking collision
 	collisionshape2d.shape.extents.y = (height) * 9
 	collisionshape2d.position.y = ((height) / 2 * 18)
-	
-	collisionshape2d.shape
 	
 	while current < height:
 		var child = new_sprite.duplicate()
@@ -33,10 +30,18 @@ func enable_static_body():
 
 func _on_body_entered(body):
 	if body.name == "Player":
-		print(0)
 		EventBus.emit_signal("player_entered_ladder", self)
 
 func _on_body_exited(body):
 	if body.name == "Player":
-		print(1)
 		EventBus.emit_signal("player_exited_ladder", self)
+
+func _on_TopArea2D_body_entered(body):
+	if body.name == "Player":
+		print(1)
+		EventBus.emit_signal("player_entered_above_ladder", self)
+
+func _on_TopArea2D_body_exited(body):
+	if body.name == "Player":
+		print(0)
+		EventBus.emit_signal("player_exited_above_ladder", self)

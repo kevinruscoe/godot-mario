@@ -1,8 +1,12 @@
 extends Node
 
 signal player_collected_coins(amount)
+
 signal player_entered_ladder(ladder)
 signal player_exited_ladder(ladder)
+signal player_entered_above_ladder(ladder)
+signal player_exited_above_ladder(ladder)
+
 signal player_moved_out_of_bounds
 signal player_has_jumped
 signal player_has_landed

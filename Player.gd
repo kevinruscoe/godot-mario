@@ -1,24 +1,31 @@
 extends KinematicBody2D
 
-export (int) var speed = 120
-export (int) var jump_speed = -180
-export (int) var gravity = 300
+class_name Player
 
-var velocity = Vector2.ZERO
-
-var initial_positon: Vector2
-
-var is_jumping = false
-var is_moving = false
-var is_falling = false
-var is_rising = false
-var on_ladder = false
-
-var moved_on_ladder = false
-var walked_over_ladder = false
-
+export (int) var move_speed = 120
+export (int) var climb_speed = 120
 export (float, 0, 1.0) var friction = 0.18
 export (float, 0, 1.0) var acceleration = 0.25
+
+export var jump_height : float = 32
+export var jump_time_to_peak : float = 0.5
+export var jump_time_to_descent : float = 0.25
+
+onready var jump_velocity : float = ((2.0 * jump_height) / jump_time_to_peak) * -1.0
+onready var jump_gravity : float = ((-2.0 * jump_height) / (jump_time_to_peak * jump_time_to_peak)) * -1.0
+onready var fall_gravity : float = ((-2.0 * jump_height) / (jump_time_to_descent * jump_time_to_descent)) * -1.0
+
+var velocity: Vector2 = Vector2.ZERO
+var initial_positon: Vector2 = Vector2.ZERO
+
+var is_jumping: bool = false
+var is_moving: bool = false
+var is_falling: bool = false
+var is_rising: bool = false
+var on_ladder: bool = false
+
+var moved_on_ladder: bool = false
+var walked_over_ladder: bool = false
 
 var current_ladder
 
@@ -44,46 +51,42 @@ func _ready():
 	EventBus.connect("player_has_started_moving", self, "_on_has_started_moving")
 
 func _physics_process(delta):
-	var direction = Vector2.ZERO
 	
-	if Input.is_action_pressed("ui_right"):
-		direction.x = 1
-	if Input.is_action_pressed("ui_left"):
-		direction.x = -1
-		
-	if direction.x != 0:
+	# Walk
+	if not get_input_velocity() == 0:
 		if not is_moving:
 			EventBus.emit_signal("player_has_started_moving")
-		velocity.x = lerp(velocity.x, direction.x * speed, acceleration)
+		velocity.x = lerp(velocity.x, get_input_velocity() * move_speed, acceleration)
 	else:
 		if is_moving:
 			EventBus.emit_signal("player_has_become_stationary")
 		velocity.x = lerp(velocity.x, 0, friction)
 		
+	# Climb and jump
 	if on_ladder:
 		if moved_on_ladder:
 			velocity.y = 0
 		else:
 			if not walked_over_ladder:
-				velocity.y += gravity * delta
+				velocity.y += get_gravity() * delta
 			
 		if Input.is_action_pressed("ui_up"):
 			moved_on_ladder = true
 			current_ladder.disable_static_body()
-			velocity.y = -speed
+			velocity.y = -climb_speed
 			
 		if Input.is_action_pressed("ui_down"):
 			moved_on_ladder = true
 			current_ladder.disable_static_body()
-			velocity.y = speed
+			velocity.y = climb_speed
 	else:
-		velocity.y += gravity * delta
+		velocity.y += get_gravity() * delta
 		
+	# Move
 	velocity = move_and_slide(velocity, Vector2.UP)
 	
-	if Input.is_action_just_pressed("ui_jump"):
-		if is_on_floor():
-			EventBus.emit_signal("player_has_jumped")
+	if Input.is_action_just_pressed("ui_jump") and is_on_floor():
+		EventBus.emit_signal("player_has_jumped")
 		
 	if is_moving:
 		EventBus.emit_signal("player_is_moving")
@@ -101,10 +104,23 @@ func _physics_process(delta):
 	else:
 		is_falling = false
 		is_rising = false
+		
+func get_gravity():
+	return jump_gravity if velocity.y < 0.0 else fall_gravity
+
+func get_input_velocity():
+	var horizontal := 0.0
+	
+	if Input.is_action_pressed("ui_left"):
+		horizontal -= 1.0
+	if Input.is_action_pressed("ui_right"):
+		horizontal += 1.0
+	
+	return horizontal
 
 func _on_jumped():
 	is_jumping = true
-	velocity.y = jump_speed
+	velocity.y = jump_velocity
 	
 func _on_landed():
 	is_jumping = false

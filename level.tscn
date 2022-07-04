@@ -797,6 +797,11 @@ points = PoolVector2Array( 18, 18, 0, 18, 0, 0, 18, 0 )
 
 [node name="Player" parent="." instance=ExtResource( 1 )]
 position = Vector2( 110, 60 )
+friction = 0.22
+acceleration = 0.2
+jump_height = 54.0
+jump_time_to_peak = 0.6
+jump_time_to_descent = 0.35
 
 [node name="Tilemaps" type="Node2D" parent="."]
 
