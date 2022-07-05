@@ -1,13 +1,9 @@
 class_name BaseState
 extends Node
 
-# export (String) var animation_name
-
-# Pass in a reference to the player's kinematic body so that it can be used by the state
 var player: Player
 
 func enter() -> void:
-	#player.animations.play(animation_name)
 	pass
 
 func exit() -> void:

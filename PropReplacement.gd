@@ -64,7 +64,7 @@ func _replace_ladders():
 		var prop_scene = load("res://Ladder.tscn")
 		var prop_instance = prop_scene.instance()
 		prop_instance.position = ladder.top.spawn_position
-		prop_instance.height = ladder.bottom.cell_to_clear.y - ladder.top.cell_to_clear.y
+		prop_instance.height = ladder.bottom.cell_to_clear.y - ladder.top.cell_to_clear.y + 1
 
 		add_child(prop_instance)
 

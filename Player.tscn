@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://jump_state.gd" type="Script" id=1]
 [ext_resource path="res://characters_packed.png" type="Texture" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://state_manager.gd" type="Script" id=5]
 [ext_resource path="res://idle_state.gd" type="Script" id=6]
 [ext_resource path="res://walk_state.gd" type="Script" id=7]
+[ext_resource path="res://on_ladder_state.gd" type="Script" id=8]
 
 [sub_resource type="AtlasTexture" id=1]
 atlas = ExtResource( 2 )
@@ -18,6 +19,11 @@ region = Rect2( 24, 0, 24, 24 )
 
 [sub_resource type="SpriteFrames" id=3]
 animations = [ {
+"frames": [ SubResource( 1 ) ],
+"loop": true,
+"name": "idle",
+"speed": 5.0
+}, {
 "frames": [ SubResource( 1 ), SubResource( 2 ) ],
 "loop": true,
 "name": "walking",
@@ -27,11 +33,6 @@ animations = [ {
 "loop": true,
 "name": "jumping",
 "speed": 5.0
-}, {
-"frames": [ SubResource( 1 ) ],
-"loop": true,
-"name": "idle",
-"speed": 5.0
 } ]
 
 [sub_resource type="CircleShape2D" id=5]
@@ -39,6 +40,7 @@ radius = 8.0
 
 [node name="Player" type="KinematicBody2D"]
 z_index = 10
+collision_mask = 30
 script = ExtResource( 3 )
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
@@ -84,12 +86,20 @@ starting_state = NodePath("idle")
 script = ExtResource( 6 )
 walk_node = NodePath("../walk")
 jump_node = NodePath("../jump")
+on_ladder_node = NodePath("../on_ladder")
 
 [node name="walk" type="Node" parent="state_manager"]
 script = ExtResource( 7 )
 idle_node = NodePath("../idle")
 jump_node = NodePath("../jump")
+on_ladder_node = NodePath("../on_ladder")
 
 [node name="jump" type="Node" parent="state_manager"]
 script = ExtResource( 1 )
+idle_node = NodePath("../idle")
+on_ladder_node = NodePath("../on_ladder")
+
+[node name="on_ladder" type="Node" parent="state_manager"]
+script = ExtResource( 8 )
+walk_node = NodePath("../walk")
 idle_node = NodePath("../idle")
