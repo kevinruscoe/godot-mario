@@ -40,7 +40,7 @@ func _on_body_exited(body):
 	EventBus.emit_signal("player_exited_on_ladder", self)
 
 func _on_FloorDetector_body_exited(body):
-	EventBus.emit_signal("player_entered_above_ladder", self)
+	EventBus.emit_signal("player_exited_above_ladder", self)
 
 func _on_FloorDetector_body_entered(body):
-	EventBus.emit_signal("player_exited_above_ladder", self)
+	EventBus.emit_signal("player_entered_above_ladder", self)

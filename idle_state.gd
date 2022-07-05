@@ -23,7 +23,7 @@ func physics_process(delta: float) -> BaseState:
 		
 	if player.on_ladder and Input.is_action_pressed("ui_down"):
 		return on_ladder_state
-		
+
 	if player.above_ladder and Input.is_action_pressed("ui_down"):
 		return on_ladder_state
 		
