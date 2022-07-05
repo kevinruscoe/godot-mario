@@ -1,28 +1,31 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=12 format=2]
 
-[ext_resource path="res://AnimatedSprite.gd" type="Script" id=1]
+[ext_resource path="res://jump_state.gd" type="Script" id=1]
 [ext_resource path="res://characters_packed.png" type="Texture" id=2]
 [ext_resource path="res://Player.gd" type="Script" id=3]
 [ext_resource path="res://CoinLabel.gd" type="Script" id=4]
-
-[sub_resource type="AtlasTexture" id=2]
-atlas = ExtResource( 2 )
-region = Rect2( 24, 0, 24, 24 )
+[ext_resource path="res://state_manager.gd" type="Script" id=5]
+[ext_resource path="res://idle_state.gd" type="Script" id=6]
+[ext_resource path="res://walk_state.gd" type="Script" id=7]
 
 [sub_resource type="AtlasTexture" id=1]
 atlas = ExtResource( 2 )
 region = Rect2( 0, 0, 24, 24 )
 
+[sub_resource type="AtlasTexture" id=2]
+atlas = ExtResource( 2 )
+region = Rect2( 24, 0, 24, 24 )
+
 [sub_resource type="SpriteFrames" id=3]
 animations = [ {
-"frames": [ SubResource( 2 ) ],
-"loop": true,
-"name": "jumping",
-"speed": 5.0
-}, {
 "frames": [ SubResource( 1 ), SubResource( 2 ) ],
 "loop": true,
 "name": "walking",
+"speed": 5.0
+}, {
+"frames": [ SubResource( 2 ) ],
+"loop": true,
+"name": "jumping",
 "speed": 5.0
 }, {
 "frames": [ SubResource( 1 ) ],
@@ -37,13 +40,11 @@ radius = 8.0
 [node name="Player" type="KinematicBody2D"]
 z_index = 10
 script = ExtResource( 3 )
-jump_speed = -150
 
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 frames = SubResource( 3 )
 animation = "jumping"
 playing = true
-script = ExtResource( 1 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2( 0, 2 )
@@ -75,7 +76,20 @@ margin_bottom = 14.0
 text = "Hello"
 script = ExtResource( 4 )
 
-[connection signal="has_become_stationary" from="." to="AnimatedSprite" method="_on_Player_has_become_stationary"]
-[connection signal="has_jumped" from="." to="AnimatedSprite" method="_on_Player_has_jumped"]
-[connection signal="has_landed" from="." to="AnimatedSprite" method="_on_Player_has_landed"]
-[connection signal="has_started_moving" from="." to="AnimatedSprite" method="_on_Player_has_started_moving"]
+[node name="state_manager" type="Node" parent="."]
+script = ExtResource( 5 )
+starting_state = NodePath("idle")
+
+[node name="idle" type="Node" parent="state_manager"]
+script = ExtResource( 6 )
+walk_node = NodePath("../walk")
+jump_node = NodePath("../jump")
+
+[node name="walk" type="Node" parent="state_manager"]
+script = ExtResource( 7 )
+idle_node = NodePath("../idle")
+jump_node = NodePath("../jump")
+
+[node name="jump" type="Node" parent="state_manager"]
+script = ExtResource( 1 )
+idle_node = NodePath("../idle")

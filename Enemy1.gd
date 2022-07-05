@@ -36,5 +36,6 @@ func _physics_process(delta):
 	velocity = move_and_slide(velocity, Vector2.UP)
 	
 func _on_Area2D_body_entered(body):
-	if body.name == "Player" and body.is_falling:
+	pass
+	if body is Player and body.is_falling:
 		queue_free()
